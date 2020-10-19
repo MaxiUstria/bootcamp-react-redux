@@ -47,11 +47,30 @@ function ManageCoursePage({
 
   function handleSave(event) {
     event.preventDefault();
+    if (!formIsValid()) return;
     setSaving(true);
-    saveCourse(course).then(() => {
-      toast.success("Se ha guardado el curso");
-      history.push("/courses");
-    });
+    saveCourse(course)
+      .then(() => {
+        toast.success("Se ha guardado el curso");
+        history.push("/courses");
+      })
+      .catch((error) => {
+        setSaving(false);
+        setErrors({ onSave: error.message });
+      });
+  }
+
+  function formIsValid() {
+    const { title, authorId, category } = course;
+    const errors = {};
+
+    if (!title) errors.title = "Falta el título";
+    if (!authorId) errors.author = "Falta el autor";
+    if (!category) errors.category = "Falta la categoría";
+
+    setErrors(errors);
+
+    return Object.keys(errors).length === 0;
   }
 
   return authors.length === 0 || courses.length === 0 ? (
