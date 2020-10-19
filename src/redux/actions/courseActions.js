@@ -1,5 +1,6 @@
 import * as types from "./actionTypes";
 import * as couresApi from "../../api/courseApi";
+import { beginApiCall } from "./apiStatusActions";
 
 export function loadCoursesSuccess(courses) {
   return { type: types.LOAD_CURSES_SUCCESS, courses };
@@ -15,6 +16,7 @@ export function updateCourseSuccess(course) {
 
 export function loadCourses() {
   return function (dispatch) {
+    dispatch(beginApiCall());
     return couresApi
       .getCourses()
       .then((courses) => {
@@ -28,6 +30,7 @@ export function loadCourses() {
 
 export function saveCourse(course) {
   return function (dispatch) {
+    dispatch(beginApiCall());
     return couresApi
       .saveCourse(course)
       .then((saveCourse) => {
